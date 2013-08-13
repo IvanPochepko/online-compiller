@@ -1,0 +1,20 @@
+{
+  "name": "JS-online-compiller",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node web"
+  },
+  "dependencies": {
+    "express": "3.1.0",
+    "coffee-script": "1.6.3",
+    "jade": "0.34.1",
+    "mongoose": "3.6.16",
+    "express-namespace": "0.1.1",
+    "connect-assets": "2.5.0",
+    "socket.io": "0.9.16",
+    "stylus": "0.36.1",
+    "sandcastle" : "0.1.0"
+  }
+}
+

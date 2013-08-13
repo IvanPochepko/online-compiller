@@ -1,0 +1,28 @@
+extends layout
+
+
+block content
+	!= js('script')
+	.container
+		.row
+			.col-lg-3.right-bar
+				.navbar.navbar-inverse
+					a.navbar-brand(href="#") Onlile JS Compiller
+					ul.nav.navbar-nav
+						li.active
+							a(href="#") Home
+			.col-lg-9.main-bar
+				.navbar.navbar-inverse
+					a.navbar-brand(href="#") Onlile JS Compiller
+					ul.nav.navbar-nav
+						li.active
+							a(href="#") Home
+						li
+							a.run-js(href="javascript:void(0)") Run
+				.row.text-bar
+					.col-lg-12
+						textarea.form-control(rows="20", placeholder="Write your code here")
+				.row.result-bar
+					.col-lg-12
+						textarea.form-control(rows="20", disabled, placeholder="And here you'll see the result")
+
