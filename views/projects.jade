@@ -1,0 +1,34 @@
+extends layout
+
+block content
+	!= js('projects')
+	.container
+		include navigation
+		.projects-table
+			h4 Your projects
+			.row
+				.col-lg-2.projects-cap Name
+				.col-lg-10.projects-cap Description
+			each project in projects
+				.row
+					.col-lg-2.projects-cell
+						a(href="/projects/#{project._id}")= project.name || 'empty'
+					.col-lg-10.projects-cell= project.description || 'empty'
+			button(type="button")#add-project.btn.btn-default Add project
+		.projects-table
+			h4 Shared projects
+			.row
+				.col-lg-2.projects-cap Name
+				.col-lg-10.projects-cap Description
+			each project in shared_projects
+				.row
+					.col-lg-2.projects-cell
+						a(href="/projects/#{project._id}")= project.name || 'empty'
+					.col-lg-10.projects-cell= project.description || 'empty'
+
+
+
+	- url='/projects/new'
+	- modal_title='New project'
+	include modal_project
+

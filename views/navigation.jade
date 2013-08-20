@@ -1,0 +1,41 @@
+.navbar.navbar-inverse
+	a.navbar-brand(href="#") Onlile JS Compiller
+	ul.nav.navbar-nav
+		if (loc=='home')
+			li.active
+				a(href="/") Home
+		else
+			li
+				a(href="/") Home
+		if user
+			if (loc=='projects')
+				li.active
+					a(href="/user/projects") Projects
+			else
+				li
+					a(href="/user/projects") Projects
+		if (loc=='jscomp')
+			li.active
+				a(href="/js_compiller") JS compiller
+		else
+			li
+				a(href="/js_compiller") JS compiller
+
+	ul.nav.navbar-nav.pull-right
+		li.dropdown
+			a.dropdown-toggle(href="#",  data-toggle="dropdown") Hello, &nbsp;
+				= user && user.firstName || 'Guest'
+				&nbsp;
+				b.caret
+			ul.dropdown-menu
+				if user
+					li
+						a(href="#") Account
+					li
+						a(href="/logout") Logout
+				else
+					li
+						a(href="/login") Sign In
+					li
+						a(href="/register") Sign Up
+

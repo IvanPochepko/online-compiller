@@ -1,0 +1,48 @@
+extends layout
+
+
+block content
+	!= js('project')
+	- isOwner = project.owner._id == user._id
+	.container
+		include navigation
+		input#project-id(type="hidden", value= project._id)
+		.row
+			.col-lg-12.project-information
+				.navbar
+					ul.nav.navbar-nav.pull-right
+						if (isOwner)
+							li.edit
+								a(href="javascript:void(0)") Edit
+							li.delete
+								a(href="javascript:void(0)") Delete
+						li
+							a(href="javascript:void(0)") Open
+				h2.col-lg-offset-5= project.name
+				.row
+					.col-lg-3
+						h4 Description
+					.col-lg-9
+						h4= project.description || 'empty'
+				.row
+					.col-lg-3
+						h4 Owner
+					.col-lg-9
+						h4
+							a(href="/users/#{project.owner._id}")= project.owner.firstName+' '+project.owner.lastName
+				.row
+					.col-lg-3
+						h4 Collaborators
+					.col-lg-9
+						each collaborator in project.collaborators
+							h4
+								a(href="/users/#{collaborator._id}")= collaborator.firstName+' '+collaborator.lastName
+
+						.add-collaborator
+							a(href="javascript:void(0)") Add collaborator
+	include modal_question
+	- url='/projects/' + project._id + '/edit'
+	- modal_title='Edit project'
+	include modal_project
+	include modal_collaborator
+

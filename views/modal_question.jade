@@ -1,0 +1,12 @@
+#question-modal.modal.fade
+	.modal-dialog.mymodal-dialog
+		.modal-content
+			.modal-header
+				button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+				h4.modal-title= 'Delete '+project.name
+			.modal-body
+				p Are you sure?
+			.modal-footer
+				button(type="button")#delete-agreee.btn.btn-default Yes
+				button(type="button",data-dismiss="modal", aria-hidden="true")#delete-close.btn.btn-default No
+

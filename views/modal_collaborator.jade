@@ -1,0 +1,16 @@
+#collaborator-modal.modal.fade
+	.modal-dialog.mymodal-dialog
+		.modal-content
+			.modal-header
+				button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+				h4.modal-title Add collaborator
+			.modal-body
+				.form-group
+					label(for="input-collaborator-email") Collaborator email
+					input#input-collaborator-email.form-control(type="text", placeholder="Collaborator email", name="name", data-trigger="focusin focusout", data-required="true")
+					.email-alert.alert.alert-danger.hide Enter an email
+					.not-found-alert.alert.alert-danger.hide User not found
+			.modal-footer
+				button(type="button")#add-collaborator-agreee.btn.btn-primary Add collaborator
+				button(type="button",data-dismiss="modal", aria-hidden="true").btn.btn-default Close
+

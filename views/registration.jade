@@ -1,0 +1,31 @@
+extends layout
+
+
+block content
+	!= js('registration')
+	.container
+		form#registration-form.form-horizontal.col-lg-4.col-lg-offset-4.auth-form(action="/register",method="POST",enctype="multipart/form-data", data-validate="parsley", data-trigger="change")
+			.form-group.form-group-email
+				label.col-lg-2.control-label.auth-label(for="inputEmail") Email
+				.col-lg-9
+					input#inputEmail.form-control(type="text", placeholder="Email", name="email", data-trigger="focusin focusout", data-required="true", data-type="email")
+			.form-group.form-group-password
+				label.col-lg-2.control-label.auth-label(for="inputPassword") Password
+				.col-lg-9
+					input#inputPassword.form-control(type="password", placeholder="Password", name="password", data-trigger="focusin focusout", data-required="true")
+			.form-group.form-group-password-repeat
+				label.col-lg-2.control-label.auth-label(for="repeatPassword") Repeat password
+				.col-lg-9
+					input#repeatPassword.form-control(type="password", placeholder="Repeat password", data-trigger="focusin focusout", data-required="true", data-equalto="#inputPassword")
+			.form-group
+				label.col-lg-2.control-label.auth-label(for="inputFirstName") First Name
+				.col-lg-9
+					input#inputFirstName.form-control(type="text", placeholder="First Name", name="firstName", data-trigger="focusin focusout", data-required="true")
+			.form-group
+				label.col-lg-2.control-label.auth-label(for="inputLastName") Last Name
+				.col-lg-9
+					input#inputLastName.form-control(type="text", placeholder="Last Name", name="lastName", data-trigger="focusin focusout", data-required="true")
+
+			.col-lg-offset-2.col-lg-9
+				button#registration-submit.btn.btn-default(type="submit") Register
+

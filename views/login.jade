@@ -1,0 +1,25 @@
+extends layout
+
+
+block content
+	!= js('login')
+	.container
+		form.form-horizontal.col-lg-4.col-lg-offset-4.auth-form(action="/login",method="POST",enctype="multipart/form-data", data-validate="parsley", data-trigger="change")
+			.form-group
+				label.col-lg-2.control-label.auth-label(for="inputEmail") Email
+				.col-lg-9
+					input#inputEmail.form-control(type="text", placeholder="Email", name="email", data-trigger="focusin focusout", data-required="true", data-type="email")
+			.form-group
+				label.col-lg-2.control-label.auth-label(for="inputPassword") Password
+				.col-lg-9
+					input#inputPassword.form-control(type="password", placeholder="Password", name="password", data-trigger="focusin focusout", data-required="true")
+			.form-group
+				.col-lg-offset-2.col-lg-10
+					.checkbox
+						label
+							input(type="checkbox")
+							| Remember me
+
+			.col-lg-offset-2.col-lg-10
+				button.btn.btn-default(type="submit") Sign in
+

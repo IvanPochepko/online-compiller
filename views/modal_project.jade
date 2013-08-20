@@ -1,0 +1,20 @@
+if (!project)
+	- project = {name:'', description:''}
+#project-modal.modal.fade
+	.modal-dialog
+		.modal-content
+			form(action= url, method="POST", enctype="multipart/form-data", data-validate="parsley", data-trigger="change")
+				.modal-header
+					button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+					h4.modal-title= modal_title
+				.modal-body
+					.form-group
+						label(for="input-project-name") Project Name
+						input#input-project-name.form-control(type="text", placeholder="Project Name", name="name", value= project.name, data-trigger="focusin focusout", data-required="true")
+					.form-group
+						label(for="textarea-project-description") Description
+						textarea#textarea-project-description.form-control(type="text", placeholder="Description", rows="10", name="description", value= project.description, data-trigger="focusin focusout", data-required="true")= project.description
+				.modal-footer
+					button(type="button", data-dismiss="modal").btn.btn-default Close
+					button(type="submit")#save-project.btn.btn-primary Save changes
+

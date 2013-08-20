@@ -1,0 +1,17 @@
+extends layout
+
+
+block content
+	!= js('script')
+	.container
+		include navigation
+		.row
+			.col-lg-12.main-bar
+				a.run-js(href="javascript:void(0)") Run
+				.row.text-bar
+					.col-lg-12
+						textarea.form-control(rows="20", placeholder="Write your code here")
+				.row.result-bar
+					.col-lg-12
+						textarea.form-control(rows="20", disabled, placeholder="And here you'll see the result")
+
