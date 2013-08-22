@@ -12,6 +12,7 @@ assets = require 'connect-assets'
 db = require './lib/db'
 auth = require './lib/auth'
 passport = require 'passport'
+RedisStore = require('connect-redis')(express)
 app = express()
 
 {User} = db.models
@@ -28,6 +29,7 @@ app.configure () ->
 	app.use express.session
 		secret: "tobeornottobethatisthequestion",
 		cookie: { maxAge: 3600000 * 24 * 365, httpOnly: false }
+		store: new RedisStore()
 	app.use express.static path.join __dirname, 'public'
 	app.use assets {src: path.join __dirname, 'public'}
 	app.use passport.initialize()
@@ -53,13 +55,14 @@ app.get '/register', (req, res) ->
 app.post '/register', (req, res) ->
 	user = req.body
 	User.register user, (err,user) ->
+		console.log err, user
+		return res.render 'registration', {title: 'Onlile JS Compiller', err, user} if err
 		res.redirect '/'
 
 app.get '/login', (req, res) ->
 	res.render 'login', {title: 'Onlile JS Compiller'}
 
 app.post '/login', passport.authenticate("local", {failureRedirect: '/login'}), (req, res) ->
-	console.log 'User ' + req.user._id + ' successfully logged in'
 	res.redirect '/'
 
 app.get '/logout', (req,res) ->
@@ -74,4 +77,3 @@ app.get '/js_compiller', (req,res) ->
 
 http.createServer(app).listen app.get('port'), () ->
 	console.log "Express server listening on port " + app.get('port')
-

@@ -10,7 +10,6 @@ exports.init = (app, passport) ->
 
 	# Local Strategy
 	localStrategy = new LocalStrategy (email, password, done) ->
-		console.log 'LocalStrategy', email
 		User.findUser {email, password}, (err, user) ->
 			return done null, false unless user
 			done null, user
@@ -22,4 +21,3 @@ exports.user = (req, res, next) ->
 	return res.redirect '/login' unless req.user
 	res.locals.user = req.user
 	next && next()
-

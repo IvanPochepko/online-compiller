@@ -10,7 +10,5 @@ exports.boot = (app) ->
 		.populate('projects')
 		.populate('shared_projects')
 		.exec (err, user) ->
-			console.log 'user', user
 			return res.redirect '/' if err
 			res.render 'projects', {title: 'Onlile JS Compiller', projects: user.projects, shared_projects: user.shared_projects, loc:'projects'}
-
