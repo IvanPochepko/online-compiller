@@ -12,7 +12,7 @@ block content
 			each project in projects
 				.row
 					.col-lg-2.projects-cell
-						a(href="/projects/#{project._id}")= project.name || 'empty'
+						a(href="/projects/#{project.owner.nickname}/#{project.name}")= project.name || 'empty'
 					.col-lg-10.projects-cell= project.description || 'empty'
 			button(type="button")#add-project.btn.btn-default Add project
 		.projects-table
@@ -31,4 +31,3 @@ block content
 	- url='/projects/new'
 	- modal_title='New project'
 	include modal_project
-

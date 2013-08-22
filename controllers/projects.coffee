@@ -12,16 +12,19 @@ exports.boot = (app) ->
 		Project.create project, (err, project) ->
 			User.findById req.user._id, (err, user) ->
 				user.projects.push project._id
-				user.save()
-				res.redirect '/user/projects'
+				path = [__dirname, '../projects', user._id, project._id].join '/'
+				fs.mkdir path, '0777', (err) ->
+					user.save()
+					res.redirect '/user/projects'
 
-
-	app.get '/:id', auth.user, (req, res) ->
-		Project.findOne({_id: req.params.id})
-		.populate('owner')
-		.populate('collaborators')
-		.exec (err, project) ->
-			res.render 'project', {project, loc:'projects'}
+	app.get '/:user/:project', auth.user, (req, res) ->
+		User.findOne {nickname: req.params.user}, '_id', (err, user) ->
+			return res.redirect '/user/projects' if err or !user
+			Project.findOne({name: req.params.project, owner: user._id })
+			.populate('owner')
+			.populate('collaborators')
+			.exec (err, project) ->
+				res.render 'project', {project, loc:'projects'}
 	app.post '/:id/delete', auth.user, (req, res) ->
 		res.send {err: 'You do not have permissions to provide this action.', success: false}
 		id = req.params.id
@@ -56,5 +59,5 @@ exports.boot = (app) ->
 		# res.send({err: null, collaborator: user, success: true})
 		# res.send({err: 'User not found', collaborator: null, success: false})
 
-	app.get '/:id/files', auth.user, (req, res) ->
+	app.get '/:user/:project/files', auth.user, (req, res) ->
 		res.send 'success'
