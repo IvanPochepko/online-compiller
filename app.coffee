@@ -45,6 +45,7 @@ auth.init app, passport
 app.namespace '/api', require('./controllers/api').boot.bind @, app
 app.namespace '/user', require('./controllers/user').boot.bind @, app
 app.namespace '/projects', require('./controllers/projects').boot.bind @, app
+app.namespace '/files', require('./controllers/files').boot.bind @, app
 
 app.get '/', (req, res) ->
 	res.render 'index', {title: 'Onlile JS Compiller', user: req.user, loc:'home'}

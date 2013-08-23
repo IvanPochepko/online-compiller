@@ -1,0 +1,15 @@
+#file-modal.modal.fade
+	input#file-data(type="hidden")
+	.modal-dialog
+		.modal-content
+			form(method="POST", enctype="multipart/form-data", data-validate="parsley", data-trigger="change")
+				.modal-header
+					button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+					h4.modal-title= modal_title
+				.modal-body
+					.form-group
+						label(for="modal-filename") Name
+						input#modal-filename.form-control(type="text", placeholder="Name", name="name", data-trigger="focusin focusout", data-required="true")
+				.modal-footer
+					button(type="button", data-dismiss="modal").btn.btn-default Close
+					button(type="submit")#save-file.btn.btn-primary Save changes

@@ -1,12 +1,12 @@
 $(document).ready () ->
 	id= $('#project-id').val()
 	$('.delete').click () ->
-		$('#question-modal').modal()
+		$('#confirm-modal').modal()
 	$('.edit').click () ->
 		$('#project-modal').modal()
 	$('.add-collaborator').click () ->
 		$('#collaborator-modal').modal()
-	$('#delete-agreee').click () ->
+	$('#confirm-yes').click () ->
 		url='/projects/'+id+'/delete'
 		console.log 'url', url
 		$.ajax(
@@ -35,4 +35,3 @@ $(document).ready () ->
 				else
 					window.location = '/projects/'+id
 		)
-

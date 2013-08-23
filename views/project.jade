@@ -17,7 +17,7 @@ block content
 							li.delete
 								a(href="javascript:void(0)") Delete
 						li
-							a(href="javascript:void(0)") Open
+							a(href="/projects/#{project.owner.nickname}/#{project.name}/files") Open
 				h2.col-lg-offset-5= project.name
 				.row
 					.col-lg-3
@@ -40,9 +40,9 @@ block content
 
 						.add-collaborator
 							a(href="javascript:void(0)") Add collaborator
-	include modal_question
+	- confirm = {text: 'Delete ' + project.name, warning: false}
+	include modals/confirm
 	- url='/projects/' + project._id + '/edit'
 	- modal_title='Edit project'
-	include modal_project
-	include modal_collaborator
-
+	include modals/new_project
+	include modals/add_collaborator

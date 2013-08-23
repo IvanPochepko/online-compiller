@@ -1,0 +1,28 @@
+extends layout
+
+block content
+
+	!= js('files')
+	.container
+		include navigation
+		input#project-id(type="hidden", value= project._id)
+		input#project-name(type="hidden", value= project.name)
+		.row
+			.col-lg-3
+				.navbar.col-lg-12
+				#tree-view.col-lg-12
+			.col-lg-9.project-information
+				ol.breadcrumb.col-lg-6.file-path
+					li
+						a(href="#") Home
+					li
+						a(href="#") Library
+					li.active Data
+				.navbar.col-lg-6
+				h2.col-lg-offset-5
+				.row
+					.col-lg-12
+						textarea#file-text.form-control(type="text", rows="20")
+	- confirm = {text: '', warning: true}
+	include modals/confirm
+	include modals/file_form

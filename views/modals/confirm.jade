@@ -1,0 +1,14 @@
+#confirm-modal.modal.fade
+	.modal-dialog.mymodal-dialog
+		input#confirm-data(type="hidden")
+		.modal-content
+			.modal-header
+				button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+				h4.modal-title= confirm.text
+			.modal-body
+				if (confirm.warning)
+					p.modal-warning.alert.alert-warning
+				p Are you sure?
+			.modal-footer
+				button(type="button")#confirm-yes.btn.btn-default Yes
+				button(type="button",data-dismiss="modal", aria-hidden="true")#confirm-no.btn.btn-default No
