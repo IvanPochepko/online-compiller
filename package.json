@@ -18,6 +18,8 @@
 	"underscore": "1.5.1",
 	"passport" : "0.1.17",
 	"passport-local": "0.1.6",
-	"connect-redis": "*"
+	"connect-redis": "*",
+	"share": "0.6.3",
+	"redis": "0.8.4"
   }
 }

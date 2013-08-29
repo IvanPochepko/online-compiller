@@ -3,6 +3,11 @@ extends layout
 block content
 
 	!= js('files')
+	!= js('libs/ace.js')
+	script(src="/channel/bcsocket.js")
+	script(src="/share/share.js")
+	script(src="/share/ace.js")
+
 	.container
 		include navigation
 		input#project-id(type="hidden", value= project._id)
@@ -22,7 +27,10 @@ block content
 				h2.col-lg-offset-5
 				.row
 					.col-lg-12
-						textarea#file-text.form-control(type="text", rows="20")
+						#editor-container
+							#editor
+
+						//textarea#file-text.form-control(type="text", rows="20")
 	- confirm = {text: '', warning: true}
 	include modals/confirm
 	include modals/file_form

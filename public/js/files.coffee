@@ -1,12 +1,14 @@
 $(document).ready () ->
 	project_id = $('#project-id').val()
 	project_name = $('#project-name').val()
+	editor = null
 	console.log project_name
-
+	opened_doc = null
 	loadFiles = (cb) ->
 		$.get ['/projects', project_id, 'files.json'].join('/'), (data) ->
 			console.log data.files
 			initTreeView data.files
+			cb and cb()
 	createFile = (data, cb) ->
 		parent_id = data.parent.id
 		path = data.parent.path.length and (data.parent.path + data.parent.name + '/') or '/'
@@ -32,7 +34,7 @@ $(document).ready () ->
 			cb and cb()
 	renameFile = (data, cb) ->
 		node_id = data.file.id
-		to_send =
+		to_send =s
 			file: data.file._id
 			project: project_id
 			name: data.name
@@ -45,10 +47,33 @@ $(document).ready () ->
 			cb and cb()
 
 	openFile = (data, cb) ->
-		console.log 'open file', data
-		cb and cb()
+		console.log 'open file', data, opened_doc
+		opened_doc.close() if opened_doc
+		sharejs.open data.name, 'text', (error, doc) ->
+			console.log error, doc.getText()
+			doc.on 'change', (op) ->
+				console.log('Version: ' + doc.version , op);
+			opened_doc = doc
+			doc.attach_ace editor
+			cb and cb()
+
+			###
+			doc.submitOp {i:"Hi there!\n", p:0}
+
+			# Get the contents of the document for some reason:
+			console.log(doc.snapshot);
+
+			doc.on 'change', (op) ->
+				console.log('Version: ' + doc.version);
+
+			# Close the doc if you want your node app to exit cleanly
+			# doc.close();
+			###
 
 	loadFiles()
+	el = $('#editor')
+	console.log el
+	window.editor = editor = ace.edit el[0]
 
 	$('#confirm-yes').on 'click', () ->
 		data = JSON.parse $('#confirm-modal #confirm-data').val()
@@ -82,12 +107,12 @@ $(document).ready () ->
 			data: tree
 			useContextMenu: false
 			onCreateLi: (node, $li) ->
-		    	# Add 'icon' span before title
-		    	type = node.is_dir && 'folder' or 'file'
-		    	$li.find('.jqtree-title').before('<img src="/img/' + type + '.png" height="20px">&nbsp;');
-		    	$li.attr 'tree_id', node.id
-		    	cssClass = node.is_root && 'root' or type
-		    	$li.addClass 'my-jqtree-' + cssClass
+				# Add 'icon' span before title
+				type = node.is_dir && 'folder' or 'file'
+				$li.find('.jqtree-title').before('<img src="/img/' + type + '.png" height="20px">&nbsp;');
+				$li.attr 'tree_id', node.id
+				cssClass = node.is_root && 'root' or type
+				$li.addClass 'my-jqtree-' + cssClass
 		$tree.bind 'tree.click', (event) ->
 			console.log event.node
 		$tree.bind 'tree.contextmenu', (event) ->
@@ -233,7 +258,6 @@ fill_level = (arr, path) ->
 sortFiles = (f1, f2) ->
 	return f1.name > f2.name and 1 or f1.name is f2.name and 0 or -1 if f1.is_dir is f2.is_dir
 	return f1.is_dir and -1 or 1
-
 
 ###test_data = [
 	name: 'dir1'

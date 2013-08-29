@@ -14,6 +14,7 @@ auth = require './lib/auth'
 passport = require 'passport'
 RedisStore = require('connect-redis')(express)
 app = express()
+sharejs = require('share').server
 
 {User} = db.models
 
@@ -41,6 +42,9 @@ app.configure 'development', () ->
 db.connection.connect(config.db)
 
 auth.init app, passport
+
+options = {db:{type: 'redis'}}
+sharejs.attach app, options
 
 app.namespace '/api', require('./controllers/api').boot.bind @, app
 app.namespace '/user', require('./controllers/user').boot.bind @, app
