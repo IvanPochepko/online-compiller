@@ -5,6 +5,7 @@ $(document).ready () ->
 	editor = null
 	console.log project_name
 	opened_doc = null
+	run_logs = [['a', 'b']]
 	loadFiles = (cb) ->
 		$.get ['/projects', project_id, 'files.json'].join('/'), (data) ->
 			console.log data.files
@@ -49,6 +50,7 @@ $(document).ready () ->
 	openFile = (data, cb) ->
 		updateBreadcrumb data.path + data.name
 		updateOperations data.name
+		run_logs = []
 		console.log 'open file', data, opened_doc
 		initEditor()
 		if opened_doc
@@ -109,16 +111,55 @@ $(document).ready () ->
 			when 'create' then createFile data
 
 	# handlers for file operations
+	$('.op-mask').click (e) ->
+		e.stopPropagation()
 	$('.file-close').click () ->
 		console.log 'here file close'
 		opened_doc.close()
 		updateBreadcrumb '/'
 		updateOperations()
-		$('#editor-container #editor').empty()
+		$('#editor-container #editor').empty().css height: 600
 		editor = null
+		logs_on = false
+		$('#logs').hide()
+	logs_on = false
+	$('.file-logs').click () ->
+		console.log 'here file logs'
+		# decrease/increase editor height
+		if logs_on
+			closeLogs()
+		else
+			openLogs()
+		logs_on = !logs_on
+	$('.file-run').click ()->
+		console.log 'file run'
+		console.log opened_doc.name
+		to_send =
+			project: project_id
+			file: opened_doc.name
+		$.post '/files/run', to_send, (data) ->
+			console.log 'Successfully run ', data
 
-
-
+	closeLogs = () ->
+		$('#logs').val('').hide()
+		$('#editor').animate
+			height: 600
+		, 300, () ->
+			editor.resize()
+	openLogs = () ->
+		val = ''
+		run_logs.forEach (obj) ->
+			args = []
+			el = for key, el of obj
+				el = JSON.stringify el if typeof el is 'object'
+				args.push el
+			val = val + args.join(', ') + '\n'
+		$('#editor').animate
+			height: 300
+		, 300, () ->
+			editor.resize()
+			# display logs
+			$('#logs').val(val).show()
 	### Files tree plugin configuration ###
 	$tree = $('#tree-view')
 	initTreeView = (data) ->

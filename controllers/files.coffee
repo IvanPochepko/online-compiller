@@ -3,6 +3,7 @@ auth = require '../lib/auth'
 _ = require 'underscore'
 fs = require 'fs'
 exec = require('child_process').exec
+client = require('share').client
 
 {Project, User, File} = db.models
 
@@ -101,3 +102,31 @@ exports.boot = (app) ->
 				File.remove {_id: {$in: ids}}, (err) ->
 					#exec command, (err, stdout) ->
 					res.send {success: true}
+	app.post '/run', auth.user, (req, res) ->
+		data = req.body
+		missed = !data.project and 'Project' or !data.file and 'File' or null
+		return res.send {success: false, errCode: 400, err: missed + ' not specified'} if missed
+		Project.findById(data.project)
+		.populate('files')
+		.populate('owner')
+		.populate('collaborators')
+		.exec (err, project) ->
+			return res.send {success: false, errCode: 500, err: 'Project not found', file: null} if err or !project
+			# Check permission
+			users = project.collaborators.concat project.owner
+			found = _.some users, (user) -> user._id.toString() == req.user._id
+			return res.send {success: false, errCode: 401, err: 'No permissions for this action', file: null} unless found
+			# check if file not exist
+			file = _.find project.files, (file) -> file._id.toString() == data.file
+			return res.send {success: false, errCode: 400, err: 'File not found', file: null} unless file
+			# now everything is ok, and we can run file
+			console.log '-----------------------'
+			console.log 'Attempt to run file'
+			console.log 'Actor: ' + req.user.firstName + ' ' + req.user.lastName
+			console.log 'Project: ' + project.name
+			console.log 'File: ' + file.path + file.name
+			console.log '---------Running...----'
+			client.open data.file, 'text', 'http://127.0.0.1:3000/channel', (err, doc) ->
+				console.log doc.snapshot
+				doc.close()
+				res.send success: true
