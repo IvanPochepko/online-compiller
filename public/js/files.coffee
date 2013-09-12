@@ -48,13 +48,17 @@ $(document).ready () ->
 
 	openFile = (data, cb) ->
 		console.log 'open file', data, opened_doc
-		opened_doc.close() if opened_doc
-		sharejs.open data.name, 'text', (error, doc) ->
+		if opened_doc
+			opened_doc.close () ->
+				open_doc data._id, cb
+		else
+			open_doc data._id, cb
+	open_doc = (name, cb) ->
+		sharejs.open name, 'text', (error, doc) ->
 			console.log error, doc.getText()
-			doc.on 'change', (op) ->
-				console.log('Version: ' + doc.version , op);
 			opened_doc = doc
 			doc.attach_ace editor
+			editor.focus()
 			cb and cb()
 
 			###
