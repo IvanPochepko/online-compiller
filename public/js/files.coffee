@@ -1,3 +1,4 @@
+RUN_EXTENSIONS = ['js', 'coffee']
 $(document).ready () ->
 	project_id = $('#project-id').val()
 	project_name = $('#project-name').val()
@@ -34,7 +35,7 @@ $(document).ready () ->
 			cb and cb()
 	renameFile = (data, cb) ->
 		node_id = data.file.id
-		to_send =s
+		to_send =
 			file: data.file._id
 			project: project_id
 			name: data.name
@@ -45,8 +46,9 @@ $(document).ready () ->
 			$('#file-modal').modal 'hide'
 			updateNode node_id, data.file
 			cb and cb()
-
 	openFile = (data, cb) ->
+		updateBreadcrumb data.path + data.name
+		updateOperations data.name
 		console.log 'open file', data, opened_doc
 		if opened_doc
 			opened_doc.close () ->
@@ -60,19 +62,26 @@ $(document).ready () ->
 			doc.attach_ace editor
 			editor.focus()
 			cb and cb()
-
-			###
-			doc.submitOp {i:"Hi there!\n", p:0}
-
-			# Get the contents of the document for some reason:
-			console.log(doc.snapshot);
-
-			doc.on 'change', (op) ->
-				console.log('Version: ' + doc.version);
-
-			# Close the doc if you want your node app to exit cleanly
-			# doc.close();
-			###
+	updateBreadcrumb = (path) ->
+		breadcrump = $('.file-path')
+		breadcrump.children(':not(:first-of-type)').remove()
+		items = path.substr(1).split '/'
+		breadcrump.append $('<li><a href="#">' + item + '</a></li>') for item in items
+	updateOperations = (file) ->
+		console.log file
+		regexp = /\.\w+$/
+		match = file.match regexp
+		console.log match
+		ext = match[0].substr 1 if match?.length
+		can_log = can_run = ext in RUN_EXTENSIONS
+		can_close = !!file
+		operations = {close: can_close, run: can_run, logs: can_log}
+		console.log 'Operations: ', operations
+		$ops = $('.file-operations')
+		for op, enabled of operations
+			console.log op if enabled
+			method = enabled and 'removeClass' or 'addClass'
+			$ops.find('.file-' + op)[method] 'disabled'
 
 	loadFiles()
 	el = $('#editor')
@@ -262,22 +271,3 @@ fill_level = (arr, path) ->
 sortFiles = (f1, f2) ->
 	return f1.name > f2.name and 1 or f1.name is f2.name and 0 or -1 if f1.is_dir is f2.is_dir
 	return f1.is_dir and -1 or 1
-
-###test_data = [
-	name: 'dir1'
-	path: '/'
-	is_dir: true,
-		name: 'dir2'
-		path: '/'
-		is_dir: true,
-	name: 'file1'
-	path: '/'
-	is_dir: false,
-		name: 'dir1.1'
-		path: '/dir1/'
-		is_dir: true,
-	name: 'file1.1'
-	path: '/dir1/dir1.1/'
-	is_dir: false
-]
-###

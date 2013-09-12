@@ -19,12 +19,20 @@ block content
 			.col-lg-9.project-information
 				ol.breadcrumb.col-lg-6.file-path
 					li
-						a(href="#") Home
-					li
-						a(href="#") Library
-					li.active Data
-				.navbar.col-lg-6
-				h2.col-lg-offset-5
+						a(href="#")= project.name
+				ul.navbar.navbar-nav.nav.col-lg-6.file-operations
+					li.file-operation.file-close.pull-right.disabled
+						.op-mask
+						a(href="#", title="close")
+							img.file-op-image(src="/img/close.png")
+					li.file-operation.file-logs.pull-right.disabled
+						.op-mask
+						a(href="#", title="logs")
+							img.file-op-image(src="/img/log.png")
+					li.file-operation.file-run.pull-right.disabled
+						.op-mask
+						a(href="#", title="run")
+							img.file-op-image(src="/img/run.png")
 				.row
 					.col-lg-12
 						#editor-container
