@@ -15,10 +15,10 @@ exports.boot = (app) ->
 			Project.create project, (err, project) ->
 				User.findById req.user._id, (err, user) ->
 					user.projects.push project._id
-					path = [__dirname, '../projects', user._id, project._id].join '/'
-					fs.mkdir path, '0777', (err) ->
-						user.save()
-						res.redirect '/user/projects'
+					#path = [__dirname, '../projects', user._id, project._id].join '/'
+					#fs.mkdir path, '0777', (err) ->
+					user.save()
+					res.redirect '/user/projects'
 
 	app.get '/:id/files.json', auth.user, (req, res) ->
 		Project.findById(req.params.id)

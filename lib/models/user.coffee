@@ -32,10 +32,10 @@ Model.register = (user, cb) ->
 		user.password = md5.digest('base64')
 		self.create user, (err, user) ->
 			return cb and cb err, null if err
-			path = __dirname + '/../../projects/' + user._id
+			#path = __dirname + '/../../projects/' + user._id
 			# create user directory
-			fs.mkdir path, '0777', (err) ->
-				cb && cb(err, user)
+			#fs.mkdir path, '0777', (err) ->
+			cb && cb(err, user)
 
 
 

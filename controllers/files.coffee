@@ -23,7 +23,7 @@ exports.boot = (app) ->
 			found = _.some project.files, (file) -> file.path is req.body.path and file.name is req.body.name
 			return res.send {success: false, errCode: 400, err: 'File already exists', file: null} if found
 			# now everything is ok, and we can create file
-			path = [__dirname, '../projects', project.owner._id, project._id].join('/') + req.body.path
+			#path = [__dirname, '../projects', project.owner._id, project._id].join('/') + req.body.path
 			file = new File
 				name: req.body.name
 				created_at: new Date()
@@ -32,15 +32,15 @@ exports.boot = (app) ->
 			file.save (err) ->
 				project.files.push file
 				project.save (err) ->
-					if file.is_dir
-						# creating file
-						fs.mkdir path + file.name, '0777', (err) -> done err, file
-					else
-						# creating folder
-						fs.open path + file.name, 'w', '0777', (err, fd) ->
-							return done err, null if err
-							fs.close fd, (err) ->
-								done err, file
+#					if file.is_dir
+#						# creating file
+#						fs.mkdir path + file.name, '0777', (err) -> done err, file
+#					else
+#						# creating folder
+#						fs.open path + file.name, 'w', '0777', (err, fd) ->
+#							return done err, null if err
+#							fs.close fd, (err) ->
+					done err, file
 		done = (err, file) ->
 			data = err and {errCode: 500, err, success: false, file: null} or {success: true, file}
 			res.send data
@@ -65,12 +65,12 @@ exports.boot = (app) ->
 			file = _.find project.files, (file) -> file._id.toString() == data.file
 			return res.send {success: false, errCode: 400, err: 'File not found', file: null} unless file
 			# now everything is ok, and we can rename file
-			path = [__dirname, '../projects', project.owner._id, project._id].join('/') + file.path
-			fs.rename path + file.name, path + data.name, (err) ->
-				return done err if err
-				file.name = data.name
-				file.save () ->
-					res.send {success: true, file: file}
+			#path = [__dirname, '../projects', project.owner._id, project._id].join('/') + file.path
+			#fs.rename path + file.name, path + data.name, (err) ->
+			#	return done err if err
+			file.name = data.name
+			file.save () ->
+				res.send {success: true, file: file}
 	app.post '/remove', auth.user, (req, res) ->
 		data = req.body
 		missed = !data.project and 'Project' or !data.file and 'File' or null
@@ -89,8 +89,8 @@ exports.boot = (app) ->
 			file = _.find project.files, (file) -> file._id.toString() == data.file
 			return res.send {success: false, errCode: 400, err: 'File not found', file: null} unless file
 			# now everything is ok, and we can remove file
-			path = [__dirname, '../projects', project.owner._id, project._id].join('/') + file.path + file.name
-			command = 'rm -rf ' + path
+			#path = [__dirname, '../projects', project.owner._id, project._id].join('/') + file.path + file.name
+			#command = 'rm -rf ' + path
 			ids = [file._id]
 			regExp = new RegExp '^' + file.path + file.name + '/.*$'
 			project.files = project.files.filter (file) ->
@@ -99,5 +99,5 @@ exports.boot = (app) ->
 				passed
 			project.save () ->
 				File.remove {_id: {$in: ids}}, (err) ->
-					exec command, (err, stdout) ->
-						res.send {success: true}
+					#exec command, (err, stdout) ->
+					res.send {success: true}
