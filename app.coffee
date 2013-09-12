@@ -43,7 +43,7 @@ db.connection.connect(config.db)
 
 auth.init app, passport
 
-options = {db:{type: 'redis'}}
+options = {db:{type: 'mongo'}}
 sharejs.attach app, options
 
 app.namespace '/api', require('./controllers/api').boot.bind @, app
