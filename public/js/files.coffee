@@ -50,6 +50,7 @@ $(document).ready () ->
 		updateBreadcrumb data.path + data.name
 		updateOperations data.name
 		console.log 'open file', data, opened_doc
+		initEditor()
 		if opened_doc
 			opened_doc.close () ->
 				open_doc data._id, cb
@@ -60,6 +61,7 @@ $(document).ready () ->
 			console.log error, doc.getText()
 			opened_doc = doc
 			doc.attach_ace editor
+			$('#editor-container').show 0
 			editor.focus()
 			cb and cb()
 	updateBreadcrumb = (path) ->
@@ -70,7 +72,7 @@ $(document).ready () ->
 	updateOperations = (file) ->
 		console.log file
 		regexp = /\.\w+$/
-		match = file.match regexp
+		match = file.match regexp if file
 		console.log match
 		ext = match[0].substr 1 if match?.length
 		can_log = can_run = ext in RUN_EXTENSIONS
@@ -84,10 +86,14 @@ $(document).ready () ->
 			$ops.find('.file-' + op)[method] 'disabled'
 
 	loadFiles()
-	el = $('#editor')
-	console.log el
-	window.editor = editor = ace.edit el[0]
+	editor = null
+	initEditor = () ->
+		return editor if editor
+		el = $('#editor')
+		window.editor = editor = ace.edit el[0]
+		return editor
 
+	# modal click handlers
 	$('#confirm-yes').on 'click', () ->
 		data = JSON.parse $('#confirm-modal #confirm-data').val()
 		$('#confirm-modal').modal 'hide'
@@ -102,9 +108,18 @@ $(document).ready () ->
 			when 'rename' then renameFile data
 			when 'create' then createFile data
 
+	# handlers for file operations
+	$('.file-close').click () ->
+		console.log 'here file close'
+		opened_doc.close()
+		updateBreadcrumb '/'
+		updateOperations()
+		$('#editor-container #editor').empty()
+		editor = null
 
 
-	### Files tree pluygin configuration ###
+
+	### Files tree plugin configuration ###
 	$tree = $('#tree-view')
 	initTreeView = (data) ->
 		tree = [
