@@ -69,12 +69,20 @@ exports.boot = (app) ->
 			file = _.find project.files, (file) -> file._id.toString() == data.file
 			return res.send {success: false, errCode: 400, err: 'File not found', file: null} unless file
 			# now everything is ok, and we can rename file
-			#path = [__dirname, '../projects', project.owner._id, project._id].join('/') + file.path
-			#fs.rename path + file.name, path + data.name, (err) ->
-			#	return done err if err
+			regexp_text = ('^' + file.path + file.name + '/').replace(/\//g, '\\/')
+			new_path = file.path + data.name + '/'
 			file.name = data.name
 			file.save () ->
 				res.send {success: true, file: file}
+				if file.is_dir
+					regexp = new RegExp(regexp_text)
+					children = project.files.filter (f) -> regexp.test f.path
+					console.log children
+					children.forEach (child) ->
+						child.path = child.path.replace regexp, new_path
+						child.save()
+
+
 	app.post '/remove', auth.user, (req, res) ->
 		data = req.body
 		missed = !data.project and 'Project' or !data.file and 'File' or null
