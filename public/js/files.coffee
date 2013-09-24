@@ -138,6 +138,9 @@ $(document).ready () ->
 			project: project_id
 			file: opened_doc.name
 		$.post '/files/run', to_send, (data) ->
+			run_logs = data.result or [[data.err]]
+			val = getLogsValue()
+			$('#logs').val(val)
 			console.log 'Successfully run ', data
 
 	closeLogs = () ->
@@ -146,7 +149,7 @@ $(document).ready () ->
 			height: 600
 		, 300, () ->
 			editor.resize()
-	openLogs = () ->
+	getLogsValue = () ->
 		val = ''
 		run_logs.forEach (obj) ->
 			args = []
@@ -154,6 +157,9 @@ $(document).ready () ->
 				el = JSON.stringify el if typeof el is 'object'
 				args.push el
 			val = val + args.join(', ') + '\n'
+		return val
+	openLogs = () ->
+		val = getLogsValue()
 		$('#editor').animate
 			height: 300
 		, 300, () ->

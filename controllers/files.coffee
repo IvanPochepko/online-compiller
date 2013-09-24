@@ -4,6 +4,9 @@ _ = require 'underscore'
 fs = require 'fs'
 exec = require('child_process').exec
 client = require('share').client
+sandcastle = require '../lib/sandcastle'
+filesystem = require '../lib/filesystem'
+
 
 {Project, User, File} = db.models
 
@@ -125,8 +128,12 @@ exports.boot = (app) ->
 			console.log 'Actor: ' + req.user.firstName + ' ' + req.user.lastName
 			console.log 'Project: ' + project.name
 			console.log 'File: ' + file.path + file.name
-			console.log '---------Running...----'
-			client.open data.file, 'text', 'http://127.0.0.1:3000/channel', (err, doc) ->
-				console.log doc.snapshot
-				doc.close()
-				res.send success: true
+			console.log '-----------------------'
+			# TODO notify client with req.flash that project starts building
+			filesystem.buildProject project, () ->
+				# TODO notify client with req.flash that project is built and now running
+				filesystem.getFile project, file, (err, text) ->
+					sandcastle.createSandbox project, (sandbox) ->
+						sandbox.runJS file, text, (err, result) ->
+							# TODO send results with error if error
+							res.send {err: err and err.stack, result}
