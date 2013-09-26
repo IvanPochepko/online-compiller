@@ -3,7 +3,6 @@ auth = require '../lib/auth'
 _ = require 'underscore'
 fs = require 'fs'
 exec = require('child_process').exec
-client = require('share').client
 sandcastle = require '../lib/sandcastle'
 filesystem = require '../lib/filesystem'
 
@@ -139,6 +138,7 @@ exports.boot = (app) ->
 			console.log '-----------------------'
 			# TODO notify client with req.flash that project starts building
 			filesystem.buildProject project, () ->
+			    console.log 'project built'
 				# TODO notify client with req.flash that project is built and now running
 				filesystem.getFile project, file, (err, text) ->
 					sandcastle.createSandbox project, (sandbox) ->

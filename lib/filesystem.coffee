@@ -3,6 +3,7 @@ async = require 'async'
 fs = require 'fs'
 exec = require('child_process').exec
 client = require('share').client
+config = require '../conf/config'
 
 
 getLevel = (file) ->
@@ -37,7 +38,7 @@ exports.buildProject = (project, cb) ->
 	file_tasks = files.map (f) ->
 		return (callback) ->
 			console.log 'creating file: ' + f.path + f.name
-			client.open f._id.toString(), 'text', 'http://127.0.0.1:3000/channel', (err, doc) ->
+			client.open f._id.toString(), 'text', 'http://127.0.0.1:' + config.port + '/channel', (err, doc) ->
 				return callback and callback err if err
 				fs.writeFile rootdir + f.path + f.name, doc.snapshot, (err) ->
 					doc.close()
